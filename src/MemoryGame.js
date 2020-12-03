@@ -1,6 +1,7 @@
-import logo from './logo.svg';
+
 import React, { Component } from 'react'
 import Card from './Card';
+import NavBar from './Navbar';
 import './App.css';
 import shuffle from 'shuffle-array';
 
@@ -36,20 +37,70 @@ export default class MemoryGame extends Component() {
     this.state = { cards, noClick: false }
     
     this.handleClick = this.handleClick.bind(this);
+    this.handleNewGame = this.handleNewGame.bind(this);
+  }
+
+  handleNewGame() {
+    let cards = this.state.cards.map(c => ({
+      ...c, // destructuring the card state then setting each one to be hiding
+      cardState: CardState.HIDING
+    }))
+    cards = shuffle(cards)
+    this.setState({cards})
   }
 
 
+  // go through the array - map each element - and if the id matches the current card we're looking for then change the state
   handleClick(id) {
-    this.setState(prevState => {
-      let cards = prevState.cards.map(c => (
-        c.id === id ? {
-          ...c,
-          cardState: c.cardState === CardState.HIDING ? CardState.MATCHING :
-            CardState.HIDING
-        } : c
-      ));
-      return {cards}
-    })
+    const mapCardState = (cards, idsToChange, newCardState) => {
+      return cards.map(c => {
+        if (idsToChange.includes(c.id)) {
+          return {
+            ...c,
+            cardState: newCardState
+         }
+        }
+        return c
+     })
+    }
+    // Grab the card we want out of the array - the one we clicked on
+    const foundCard = this.state.cards.find(c => c.id === id);
+    // Checking if the ard we clicked on is not hiding as to over ride 
+    if (this.state.noClick || foundCard.cardState !== CardState.HIDING) {
+      return 
+    }
+    let noClick = false;
+
+    let cards = mapCardState(this.state.cards, [id], CardState.SHOWING);
+
+    // Filter that to only get showing cards back 
+    const showingCards = cards.filter((c) => c.cardState === CardState.SHOWING)
+
+    const ids = showingCards.map(c => c.id);
+    // Now we have an array of showing cards and their ids
+
+    // This is the case when to show the state of the both the cards to matching
+    if (showingCards.length === 2 && 
+      showingCards[0].backgroundColor === showingCards[1].backgroundColor) {
+      cards = mapCardState(cards, ids, CardState.MATCHING);
+      // hide them after showing for a little bit
+    } else if (showingCards.length === 2) {
+      let hidingCards = mapCardState(cards, ids, CardState.HIDING)
+
+      noClick = true;
+
+      this.setState({ cards, noClick }, () => {
+        // call back function to run after the state is set
+        setTimeout(() => {
+          this.setState({ cards: hidingCards, noClick: false })
+        }, 1100);
+      })
+      return;
+    }
+    // We'll reach this in one of two cases
+    // 1 - There is only one card showing that is now matched
+    // 2 - There are two cards showing that now do match
+    this.setState({cards, noClick})
   }
 
 
@@ -64,6 +115,7 @@ export default class MemoryGame extends Component() {
     ))
   return(
     <div className="memory-game">
+      <NavBar onNewGame={this.handleNewGame}/>
      {cards}
     </div>
   );
