@@ -1,7 +1,7 @@
 
 import React, { Component } from 'react'
 import Card from './Card';
-import NavBar from './Navbar';
+import Navbar from './Navbar';
 import './App.css';
 import shuffle from 'shuffle-array';
 
@@ -11,7 +11,7 @@ const CardState = {
   MATCHING: 2
 }
 
-export default class MemoryGame extends Component() {
+export default class MemoryGame extends Component {
   constructor(props) {
     super(props);
 
@@ -115,7 +115,7 @@ export default class MemoryGame extends Component() {
     ))
   return(
     <div className="memory-game">
-      <NavBar onNewGame={this.handleNewGame}/>
+      <Navbar onNewGame={this.handleNewGame}/>
      {cards}
     </div>
   );
