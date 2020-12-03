@@ -36,3 +36,14 @@
     transform: rotate(360deg);
   }
 }
+
+.card-container {
+  margin: 10px;
+  height: 150px;
+  min-height: 100px;
+  width: 10%;
+  background-color: grey;
+  border: 5px solid grey;
+  border-radius: 25px;
+  display: inline-block;
+}
