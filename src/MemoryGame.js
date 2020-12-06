@@ -30,8 +30,8 @@ export default class MemoryGame extends Component {
       { id: 11, cardState: CardState.HIDING, backgroundColor: 'purple' },
       { id: 12, cardState: CardState.HIDING, backgroundColor: 'pink' },
       { id: 13, cardState: CardState.HIDING, backgroundColor: 'pink' },
-      { id: 14, cardState: CardState.HIDING, backgroundColor: 'lightsky' },
-      { id: 15, cardState: CardState.HIDING, backgroundColor: 'lightsky' }
+      { id: 14, cardState: CardState.HIDING, backgroundColor: 'orange' },
+      { id: 15, cardState: CardState.HIDING, backgroundColor: 'orange' }
     ];
     cards = shuffle(cards);
     this.state = { cards, noClick: false, animate: false }
