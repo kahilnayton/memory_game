@@ -34,7 +34,7 @@ export default class MemoryGame extends Component {
       { id: 15, cardState: CardState.HIDING, backgroundColor: 'lightsky' }
     ];
     cards = shuffle(cards);
-    this.state = { cards, noClick: false }
+    this.state = { cards, noClick: false, animate: false }
     
     this.handleClick = this.handleClick.bind(this);
     this.handleNewGame = this.handleNewGame.bind(this);
@@ -85,6 +85,8 @@ export default class MemoryGame extends Component {
       cards = mapCardState(cards, ids, CardState.MATCHING);
       // hide them after showing for a little bit
     } else if (showingCards.length === 2) {
+      // TODO: WRITE FUNCTION TO ANIMATE
+
       let hidingCards = mapCardState(cards, ids, CardState.HIDING)
 
       noClick = true;
@@ -92,7 +94,7 @@ export default class MemoryGame extends Component {
       this.setState({ cards, noClick }, () => {
         // call back function to run after the state is set
         setTimeout(() => {
-          this.setState({ cards: hidingCards, noClick: false })
+          this.setState({ cards: hidingCards, noClick: false,  })
         }, 1100);
       })
       return;
@@ -108,9 +110,10 @@ export default class MemoryGame extends Component {
     const cards = this.state.cards.map((card) => (
       <Card
         key={card.id}
+        noClick={this.state.noClick}
         showing={card.cardState !== CardState.HIDING}
         backgroundColor={card.backgroundColor}
-        onClick={() => {}}
+        onClick={() => this.handleClick(card.id)}
       />
     ))
   return(
